@@ -3,19 +3,21 @@
 import { useState } from "react";
 import { useEffect } from "react";
 
+const assetPrefix = process.env.NODE_ENV === "production" ? "/ab-major" : "";
+
 const orbitImages = [
-  "/images/ant.jpg",
-  "/images/aphex.jpg",
-  "/images/dog.jpg",
-  "/images/dog2.jpg",
-  "/images/gum.jpg",
-  "/images/hand.jpg",
-  "/images/banana.jpg",
-  "/images/camus.jpg",
-  "/images/myspirit.jpg",
-  "/images/owl.jpg",
-  "/images/prodigy.jpg",
-  "/images/thief.jpg",
+  `${assetPrefix}/images/ant.jpg`,
+  `${assetPrefix}/images/aphex.jpg`,
+  `${assetPrefix}/images/dog.jpg`,
+  `${assetPrefix}/images/dog2.jpg`,
+  `${assetPrefix}/images/gum.jpg`,
+  `${assetPrefix}/images/hand.jpg`,
+  `${assetPrefix}/images/banana.jpg`,
+  `${assetPrefix}/images/camus.jpg`,
+  `${assetPrefix}/images/myspirit.jpg`,
+  `${assetPrefix}/images/owl.jpg`,
+  `${assetPrefix}/images/prodigy.jpg`,
+  `${assetPrefix}/images/thief.jpg`,
 ];
 
 export default function HomePage() {
