@@ -95,7 +95,7 @@ a:focus-visible {
   font-weight: 700;
   line-height: 1;
   transform-origin: center;
-  animation: page-fade-in 700ms ease-out backwards;
+  animation: page-fade-in 1000ms ease-in-out backwards;
   transition: opacity 650ms ease, transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -118,7 +118,7 @@ a:focus-visible {
   background: var(--foreground);
   cursor: pointer;
   transform-origin: center;
-  animation: page-fade-in 700ms 120ms ease-out backwards;
+  animation: page-fade-in 1000ms 120ms ease-in-out backwards;
   transition: opacity 650ms ease, transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -164,7 +164,7 @@ a:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  animation: page-fade-in 700ms ease-out both;
+  animation: page-fade-in 1000ms ease-in-out both;
 }
 
 .black-home {
@@ -196,7 +196,7 @@ a:focus-visible {
   background: #fff;
   cursor: pointer;
   transform-origin: center;
-  animation: page-fade-in 700ms 160ms ease-out both;
+  animation: page-fade-in 1000ms 160ms ease-in-out both;
   transition: opacity 650ms ease, transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -305,7 +305,7 @@ a:focus-visible {
 
   65% {
     opacity: 1;
-    transform: translate(-50%, -50%) rotate(var(--orbit-angle)) translateX(clamp(8.5rem, 23vw, 15rem)) scale(0.94);
+    transform: translate(-50%, -50%) rotate(var(--orbit-angle)) translateX(clamp(8.5rem, 23vw, 15rem)) scale(1);
   }
 
   100% {
@@ -654,7 +654,7 @@ a:focus-visible {
   .corner-dot,
   .black-header,
   .black-corner-dot {
-    animation-duration: 180ms;
+    animation-duration: 450ms;
     animation-delay: 0ms;
   }
 }
