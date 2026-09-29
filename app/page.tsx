@@ -23,7 +23,6 @@ const orbitImages = [
   `${assetPrefix}/images/ant.jpg`,
   `${assetPrefix}/images/banana.jpg`,
 ];
-const orbitEntryTotal = orbitEntryDuration + (orbitImages.length - 1) * orbitEntryStagger;
 
 export default function HomePage() {
   const router = useRouter();
@@ -66,7 +65,6 @@ export default function HomePage() {
         aria-hidden={!isOpen}
         style={{
           "--orbit-entry-duration": `${orbitEntryDuration}ms`,
-          "--orbit-entry-total": `${orbitEntryTotal}ms`,
         } as React.CSSProperties}
       >
         {orbitImages.map((image, index) => {
