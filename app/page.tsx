@@ -1,29 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const assetPrefix = process.env.NODE_ENV === "production" ? "/ab-major" : "";
+const orbitEntryDuration = 1400;
+const orbitEntryDelay = 700;
+const orbitEntryStagger = 110;
 
 const orbitImages = [
   `${assetPrefix}/images/ant.jpg`,
-  `${assetPrefix}/images/aphex.jpg`,
-  `${assetPrefix}/images/dog.jpg`,
-  `${assetPrefix}/images/dog2.jpg`,
-  `${assetPrefix}/images/gum.jpg`,
-  `${assetPrefix}/images/hand.jpg`,
   `${assetPrefix}/images/banana.jpg`,
-  `${assetPrefix}/images/camus.jpg`,
-  `${assetPrefix}/images/myspirit.jpg`,
-  `${assetPrefix}/images/owl.jpg`,
-  `${assetPrefix}/images/prodigy.jpg`,
-  `${assetPrefix}/images/thief.jpg`,
+  `${assetPrefix}/images/gum.jpg`,
+  `${assetPrefix}/images/ant.jpg`,
+  `${assetPrefix}/images/banana.jpg`,
+  `${assetPrefix}/images/gum.jpg`,
+  `${assetPrefix}/images/ant.jpg`,
+  `${assetPrefix}/images/banana.jpg`,
+  `${assetPrefix}/images/gum.jpg`,
+  `${assetPrefix}/images/ant.jpg`,
+  `${assetPrefix}/images/banana.jpg`,
+  `${assetPrefix}/images/gum.jpg`,
+  `${assetPrefix}/images/ant.jpg`,
+  `${assetPrefix}/images/banana.jpg`,
 ];
+const orbitInteractionDelay =
+  orbitEntryDelay + (orbitImages.length - 1) * orbitEntryStagger + orbitEntryDuration + 120;
 
 export default function HomePage() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isSettled, setIsSettled] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const orbitStep = 360 / orbitImages.length;
 
   useEffect(() => {
@@ -31,10 +40,22 @@ export default function HomePage() {
       return;
     }
 
-    const settleTimer = window.setTimeout(() => setIsSettled(true), 3500);
+    const settleTimer = window.setTimeout(
+      () => setIsSettled(true),
+      orbitInteractionDelay,
+    );
 
     return () => window.clearTimeout(settleTimer);
   }, [isOpen]);
+
+  function openArchive() {
+    if (isTransitioning) {
+      return;
+    }
+
+    setIsTransitioning(true);
+    window.setTimeout(() => router.push("/black/"), 900);
+  }
 
   return (
     <main className={`site-shell${isOpen ? " is-open" : ""}${isSettled ? " is-settled" : ""}`}>
@@ -47,6 +68,13 @@ export default function HomePage() {
       >
         ab-major
       </button>
+      <button
+        className="corner-dot"
+        type="button"
+        aria-label="Abrir archivo"
+        onClick={openArchive}
+        disabled={isTransitioning}
+      />
 
       <div className="orbit" aria-hidden={!isOpen}>
         {orbitImages.map((image, index) => {
@@ -59,13 +87,22 @@ export default function HomePage() {
 
           return (
             <div
-              key={image}
+              key={`${image}-${index}`}
               className="orbit-item"
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
+              onMouseEnter={() => {
+                if (isSettled) {
+                  setHoveredIndex(index);
+                }
+              }}
+              onMouseLeave={() => {
+                if (isSettled) {
+                  setHoveredIndex(null);
+                }
+              }}
               style={{
                 "--orbit-angle": `${targetIndex * orbitStep}deg`,
-                "--orbit-delay": `${700 + index * 110}ms`,
+                "--orbit-delay": `${orbitEntryDelay + index * orbitEntryStagger}ms`,
+                "--orbit-duration": `${orbitEntryDuration}ms`,
               } as React.CSSProperties}
             >
               <div className="orbit-face">
@@ -75,6 +112,10 @@ export default function HomePage() {
           );
         })}
       </div>
+      <div
+        className={`page-wipe${isTransitioning ? " is-active" : ""}`}
+        aria-hidden="true"
+      />
     </main>
   );
 }

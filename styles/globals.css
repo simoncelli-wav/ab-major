@@ -95,6 +95,7 @@ a:focus-visible {
   font-weight: 700;
   line-height: 1;
   transform-origin: center;
+  animation: page-fade-in 700ms ease-out backwards;
   transition: opacity 650ms ease, transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -103,10 +104,129 @@ a:focus-visible {
   transform: scale(1.35);
 }
 
+.corner-dot {
+  position: fixed;
+  top: var(--page-gutter);
+  right: var(--page-gutter);
+  z-index: 2;
+  display: block;
+  width: 1.25rem;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--foreground);
+  cursor: pointer;
+  transform-origin: center;
+  animation: page-fade-in 700ms 120ms ease-out backwards;
+  transition: opacity 650ms ease, transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.corner-dot:hover {
+  transform: scale(1.35);
+}
+
+.corner-dot:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 5px;
+}
+
+.page-wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  background: #000;
+  clip-path: circle(0 at calc(100% - var(--page-gutter) - 0.625rem) calc(var(--page-gutter) + 0.625rem));
+  pointer-events: none;
+  transition: clip-path 900ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.page-wipe.is-active {
+  clip-path: circle(150vmax at calc(100% - var(--page-gutter) - 0.625rem) calc(var(--page-gutter) + 0.625rem));
+}
+
 .is-open .brand-mark {
   opacity: 0;
   pointer-events: none;
   transform: scale(0.7);
+}
+
+.black-page {
+  display: grid;
+  min-height: 100svh;
+  grid-template-rows: auto 1fr;
+  padding: var(--page-gutter);
+  background: #000;
+  color: #fff;
+}
+
+.black-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: page-fade-in 700ms ease-out both;
+}
+
+.black-home {
+  font-weight: 700;
+}
+
+.black-home,
+.black-index {
+  pointer-events: none;
+  user-select: none;
+}
+
+.black-index {
+  margin: 0;
+  color: #fff;
+  font-size: var(--type-label);
+}
+
+.black-corner-dot {
+  position: fixed;
+  right: var(--page-gutter);
+  bottom: var(--page-gutter);
+  z-index: 2;
+  width: 1.25rem;
+  aspect-ratio: 1;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  padding: 0;
+  background: #fff;
+  cursor: pointer;
+  transform-origin: center;
+  animation: page-fade-in 700ms 160ms ease-out both;
+  transition: opacity 650ms ease, transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.black-corner-dot:hover,
+.black-corner-dot:focus-visible {
+  transform: scale(1.35);
+}
+
+.black-corner-dot:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 5px;
+}
+
+.page-wipe-light {
+  background: #fff;
+  clip-path: circle(0 at calc(100% - var(--page-gutter) - 0.625rem) calc(100% - var(--page-gutter) - 0.625rem));
+}
+
+.page-wipe-light.is-active {
+  clip-path: circle(150vmax at calc(100% - var(--page-gutter) - 0.625rem) calc(100% - var(--page-gutter) - 0.625rem));
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .orbit {
@@ -121,9 +241,13 @@ a:focus-visible {
 
 .is-open .orbit {
   opacity: 1;
-  pointer-events: auto;
+  pointer-events: none;
   transform: scale(1);
   animation: orbit-spin 36s linear 2.8s infinite;
+}
+
+.is-open.is-settled .orbit {
+  pointer-events: auto;
 }
 
 .orbit-item {
@@ -138,7 +262,7 @@ a:focus-visible {
 }
 
 .is-open .orbit-item {
-  animation: orbit-image-enter 1400ms var(--orbit-delay) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: orbit-image-enter var(--orbit-duration) var(--orbit-delay) cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .is-open.is-settled .orbit-item {
@@ -522,5 +646,14 @@ a:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark,
+  .corner-dot,
+  .black-header,
+  .black-corner-dot {
+    animation: none;
   }
 }
