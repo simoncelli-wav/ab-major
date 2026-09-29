@@ -1,12 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const assetPrefix = process.env.NODE_ENV === "production" ? "/ab-major" : "";
-const orbitEntryDuration = 1400;
-const orbitEntryDelay = 700;
-const orbitEntryStagger = 110;
 
 const orbitImages = [
   `${assetPrefix}/images/ant.jpg`,
@@ -24,29 +21,13 @@ const orbitImages = [
   `${assetPrefix}/images/ant.jpg`,
   `${assetPrefix}/images/banana.jpg`,
 ];
-const orbitInteractionDelay =
-  orbitEntryDelay + (orbitImages.length - 1) * orbitEntryStagger + orbitEntryDuration + 120;
 
 export default function HomePage() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [isSettled, setIsSettled] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const orbitStep = 360 / orbitImages.length;
-
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    const settleTimer = window.setTimeout(
-      () => setIsSettled(true),
-      orbitInteractionDelay,
-    );
-
-    return () => window.clearTimeout(settleTimer);
-  }, [isOpen]);
 
   function openArchive() {
     if (isTransitioning) {
@@ -58,7 +39,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className={`site-shell${isOpen ? " is-open" : ""}${isSettled ? " is-settled" : ""}`}>
+    <main className={`site-shell${isOpen ? " is-open" : ""}`}>
       <button
         className="brand-mark"
         type="button"
@@ -89,20 +70,10 @@ export default function HomePage() {
             <div
               key={`${image}-${index}`}
               className="orbit-item"
-              onMouseEnter={() => {
-                if (isSettled) {
-                  setHoveredIndex(index);
-                }
-              }}
-              onMouseLeave={() => {
-                if (isSettled) {
-                  setHoveredIndex(null);
-                }
-              }}
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
               style={{
                 "--orbit-angle": `${targetIndex * orbitStep}deg`,
-                "--orbit-delay": `${orbitEntryDelay + index * orbitEntryStagger}ms`,
-                "--orbit-duration": `${orbitEntryDuration}ms`,
               } as React.CSSProperties}
             >
               <div className="orbit-face">
