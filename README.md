@@ -1,5 +1,7 @@
 # Portfolio experimental
 
+[Abrir la web publicada](https://simoncelli-wav.github.io/ab-major/)
+
 Portfolio personal para presentar el trabajo de un diseñador y desarrollador web. La experiencia combina proyectos visuales, interacción y animaciones cuidadas con una interfaz minimalista: cada elemento tiene espacio para respirar y el trabajo ocupa el centro.
 
 > Proyecto en desarrollo. La dirección visual y el contenido pueden evolucionar durante la exploración.
