@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const assetPrefix = process.env.NODE_ENV === "production" ? "/ab-major" : "";
+const orbitEntryDuration = 1500;
+const orbitEntryStagger = 90;
 
 const orbitImages = [
   `${assetPrefix}/images/ant.jpg`,
@@ -21,10 +23,12 @@ const orbitImages = [
   `${assetPrefix}/images/ant.jpg`,
   `${assetPrefix}/images/banana.jpg`,
 ];
+const orbitEntryTotal = orbitEntryDuration + (orbitImages.length - 1) * orbitEntryStagger;
 
 export default function HomePage() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [isSettled, setIsSettled] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const orbitStep = 360 / orbitImages.length;
@@ -39,7 +43,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className={`site-shell${isOpen ? " is-open" : ""}`}>
+    <main className={`site-shell${isOpen ? " is-open" : ""}${isSettled ? " is-settled" : ""}`}>
       <button
         className="brand-mark"
         type="button"
@@ -57,7 +61,14 @@ export default function HomePage() {
         disabled={isTransitioning}
       />
 
-      <div className="orbit" aria-hidden={!isOpen}>
+      <div
+        className="orbit"
+        aria-hidden={!isOpen}
+        style={{
+          "--orbit-entry-duration": `${orbitEntryDuration}ms`,
+          "--orbit-entry-total": `${orbitEntryTotal}ms`,
+        } as React.CSSProperties}
+      >
         {orbitImages.map((image, index) => {
           const oppositeIndex = (orbitImages.length / 2 + index) % orbitImages.length;
           const targetIndex = hoveredIndex === index
@@ -65,6 +76,7 @@ export default function HomePage() {
             : hoveredIndex === oppositeIndex
               ? hoveredIndex
               : index;
+          const isLastImage = index === orbitImages.length - 1;
 
           return (
             <div
@@ -72,8 +84,14 @@ export default function HomePage() {
               className="orbit-item"
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
+              onAnimationEnd={() => {
+                if (isLastImage) {
+                  setIsSettled(true);
+                }
+              }}
               style={{
                 "--orbit-angle": `${targetIndex * orbitStep}deg`,
+                "--orbit-entry-delay": `${index * orbitEntryStagger}ms`,
               } as React.CSSProperties}
             >
               <div className="orbit-face">
